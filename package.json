@@ -1,0 +1,67 @@
+{
+  "name": "pkgsort",
+  "version": "0.0.0",
+  "description": "The opinionated, deterministic package.json formatter for professional JavaScript and TypeScript teams.",
+  "keywords": [
+    "package.json",
+    "formatter",
+    "linter",
+    "sort",
+    "monorepo",
+    "workspaces",
+    "prettier",
+    "eslint",
+    "ci",
+    "deterministic"
+  ],
+  "homepage": "https://github.com/pkgsort/pkgsort#readme",
+  "bugs": {
+    "url": "https://github.com/pkgsort/pkgsort/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkgsort/pkgsort.git"
+  },
+  "license": "MIT",
+  "author": "pkgsort contributors",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "sideEffects": false,
+  "bin": {
+    "pkgsort": "./dist/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "dev": "tsc --project tsconfig.build.json --watch",
+    "clean": "rimraf dist coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
+    "prepublishOnly": "npm run clean && npm run check && npm run build",
+    "changeset": "changeset",
+    "release": "changeset publish"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test & coverage artifacts
+coverage/
+.nyc_output/
+*.log
+
+# Caches
+.eslintcache
+.cache/
+.turbo/
+.vitest/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor & OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# Changesets publish artifacts
+.changeset/*.md
+!.changeset/README.md
+!.changeset/config.json

@@ -1,5 +1,5 @@
 {
-  "name": "pkgsort",
+  "name": "@rsuvarna/pkgsort",
   "version": "0.1.0",
   "description": "The opinionated, deterministic package.json formatter for professional JavaScript and TypeScript teams.",
   "keywords": [
@@ -30,7 +30,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": false
   },
   "sideEffects": false,
   "bin": {

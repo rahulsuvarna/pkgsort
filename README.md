@@ -24,14 +24,12 @@ about it: what order should the keys go in? Should `dependencies` be sorted?
 Why does this field have a trailing comma and that one doesn't? Why did the diff
 touch 40 lines when someone ran `npm install`?
 
-[`sort-package-json`](https://github.com/keithamus/sort-package-json) solved
-**key ordering** and did it well. pkgsort is not trying to replace it.
+package.json is source code. It deserves the same deterministic formatting,
+repeatable automation, and CI enforcement as any other source file.
 
-**pkgsort solves a different problem: treating `package.json` as a first-class,
-CI-enforced source artifact.** It reads, sorts, and writes with guarantees a
-casual sorter does not make — byte-level determinism, monorepo-wide
-enforcement, and CI-grade reporting — the way Prettier makes source formatting
-boring and conflict-free.
+pkgsort provides a consistent way to read, sort, and write package.json files so
+teams can eliminate unnecessary diffs, reduce merge conflicts, and enforce a
+single canonical structure across projects.
 
 |                                        | `sort-package-json` | **pkgsort**                                  |
 | -------------------------------------- | ------------------- | -------------------------------------------- |
@@ -153,6 +151,7 @@ The complete, documented configuration reference lives in
 | [Configuration](./docs/CONFIG.md)      | Every option, its default, and rationale. |
 | [Roadmap](./docs/ROADMAP.md)           | Milestones from `0.x` to `1.0`.           |
 | [Contributing](./CONTRIBUTING.md)      | How to set up, test, and submit changes.  |
+| [Releasing](./docs/RELEASING.md)       | How maintainers cut and publish releases. |
 | [Changelog](./CHANGELOG.md)            | Notable changes, per release.             |
 
 ## Contributing

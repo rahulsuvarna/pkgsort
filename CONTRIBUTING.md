@@ -135,9 +135,14 @@ coverage below threshold will fail CI.
 
 ## Releasing (maintainers)
 
-Releases are managed with [Changesets](https://github.com/changesets/changesets).
-Merging the "Version Packages" PR publishes to npm with provenance. Contributors
-never need to publish manually.
+Releases are automated through GitHub Actions. Publishing a **GitHub Release**
+triggers [`.github/workflows/publish.yml`](./.github/workflows/publish.yml),
+which validates, builds, and publishes the package to npm using **npm Trusted
+Publishing (OIDC)** with provenance — no npm token is stored, and no one runs
+`npm publish` by hand. Contributors never need to publish manually.
+
+See [`docs/RELEASING.md`](./docs/RELEASING.md) for the full runbook: versioning
+strategy, prerequisites, and the exact steps to cut a release.
 
 ## Questions
 

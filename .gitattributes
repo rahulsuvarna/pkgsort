@@ -1,0 +1,14 @@
+# Normalize line endings to LF for all text files on every platform.
+# This overrides individual contributors' core.autocrlf settings, keeping the
+# repository deterministic and matching Prettier's `endOfLine: 'lf'` (see
+# prettier.config.js) so checks behave identically on Linux, macOS, and Windows.
+* text=auto eol=lf
+
+# Common binary types — never normalize or diff as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

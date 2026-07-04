@@ -1,6 +1,6 @@
 {
   "name": "pkgsort",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The opinionated, deterministic package.json formatter for professional JavaScript and TypeScript teams.",
   "keywords": [
     "package.json",
@@ -14,13 +14,13 @@
     "ci",
     "deterministic"
   ],
-  "homepage": "https://github.com/pkgsort/pkgsort#readme",
+  "homepage": "https://github.com/rahulsuvarna/pkgsort#readme",
   "bugs": {
-    "url": "https://github.com/pkgsort/pkgsort/issues"
+    "url": "https://github.com/rahulsuvarna/pkgsort/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pkgsort/pkgsort.git"
+    "url": "git+https://github.com/rahulsuvarna/pkgsort.git"
   },
   "license": "MIT",
   "author": "pkgsort contributors",

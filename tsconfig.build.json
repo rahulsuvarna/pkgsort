@@ -3,7 +3,12 @@
   "compilerOptions": {
     /* Production builds ship only compiled library sources — no tests or config. */
     "rootDir": "src",
-    "noEmit": false
+    "noEmit": false,
+    /* Ship type declarations, but no source or declaration maps: the maps would
+       reference `src/`, which is not published. */
+    "declaration": true,
+    "sourceMap": false,
+    "declarationMap": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "coverage", "tests", "**/*.test.ts", "**/*.spec.ts"]

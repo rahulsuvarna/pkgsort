@@ -17,8 +17,11 @@ permissions:
 # NODE_OPTIONS=--throw-deprecation is set per `run:` step below rather than
 # globally: a workflow- or job-level `env` also applies to third-party `uses:`
 # actions (e.g. actions/setup-node), whose own deprecation warnings (such as
-# punycode) would then become fatal. Scoping it to our own steps keeps
-# deprecations failing for our code without breaking setup actions.
+# punycode) would then become fatal. It is also deliberately NOT set on the
+# `npm ci` steps, because npm itself triggers deprecation warnings during
+# install; with --throw-deprecation those become uncaught exceptions and npm
+# aborts with "Exit handler never called!". It is applied only to the steps
+# that run our own project code.
 
 jobs:
   # Fast-failing quality gates run once on the LTS baseline.
@@ -32,8 +35,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-        env:
-          NODE_OPTIONS: --throw-deprecation
+      # TEMPORARY: dump npm's debug log if npm ci failed, to diagnose the
+      # "Exit handler never called!" crash. Remove once the issue is resolved.
+      - name: Print npm debug log on failure
+        if: failure()
+        shell: bash
+        run: cat ~/.npm/_logs/* 2>/dev/null || echo "no npm debug logs found"
       - run: npm run typecheck
         env:
           NODE_OPTIONS: --throw-deprecation
@@ -61,8 +68,12 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
-        env:
-          NODE_OPTIONS: --throw-deprecation
+      # TEMPORARY: dump npm's debug log if npm ci failed, to diagnose the
+      # "Exit handler never called!" crash. Remove once the issue is resolved.
+      - name: Print npm debug log on failure
+        if: failure()
+        shell: bash
+        run: cat ~/.npm/_logs/* 2>/dev/null || echo "no npm debug logs found"
       - run: npm run build
         env:
           NODE_OPTIONS: --throw-deprecation
@@ -89,8 +100,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-        env:
-          NODE_OPTIONS: --throw-deprecation
+      # TEMPORARY: dump npm's debug log if npm ci failed, to diagnose the
+      # "Exit handler never called!" crash. Remove once the issue is resolved.
+      - name: Print npm debug log on failure
+        if: failure()
+        shell: bash
+        run: cat ~/.npm/_logs/* 2>/dev/null || echo "no npm debug logs found"
       - run: npm run build
         env:
           NODE_OPTIONS: --throw-deprecation

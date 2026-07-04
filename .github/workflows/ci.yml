@@ -14,9 +14,11 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  # Fail the build on any deprecation or unhandled rejection.
-  NODE_OPTIONS: --throw-deprecation
+# NODE_OPTIONS=--throw-deprecation is set per `run:` step below rather than
+# globally: a workflow- or job-level `env` also applies to third-party `uses:`
+# actions (e.g. actions/setup-node), whose own deprecation warnings (such as
+# punycode) would then become fatal. Scoping it to our own steps keeps
+# deprecations failing for our code without breaking setup actions.
 
 jobs:
   # Fast-failing quality gates run once on the LTS baseline.
@@ -30,9 +32,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run typecheck
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run lint
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run format:check
+        env:
+          NODE_OPTIONS: --throw-deprecation
 
   # The real correctness signal: full suite across supported Node & OS.
   # Minimum supported runtime is Node 22 LTS; 24 tracks current.
@@ -51,8 +61,14 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run build
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run test:coverage
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: actions/upload-artifact@v4
@@ -73,5 +89,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm run build
+        env:
+          NODE_OPTIONS: --throw-deprecation
       - run: npm pack --dry-run
+        env:
+          NODE_OPTIONS: --throw-deprecation

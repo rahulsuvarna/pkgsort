@@ -1,0 +1,9 @@
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test & coverage artifacts
+coverage/
+
+# Local, per-user tooling state (gitignored, not project source)
+.claude/

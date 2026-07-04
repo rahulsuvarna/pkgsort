@@ -52,16 +52,18 @@ formatting logic. This boundary is the single most important invariant.
 `format(input: string, config: ResolvedConfig): FormatResult`
 
 The pipeline is deliberately minimal: **read → sort → write.** There is no
-value-transformation ("normalize") stage. pkgsort changes the *arrangement* of a
-`package.json`, never the *meaning* of its values.
+value-transformation ("normalize") stage. pkgsort changes the _arrangement_ of a
+`package.json`, never the _meaning_ of its values.
 
 ### Stage 1 — Parse (read)
-- Parse the input into a plain object plus *detected style* (indentation, final
+
+- Parse the input into a plain object plus _detected style_ (indentation, final
   newline). We record the original detail so we can report `changed` accurately.
 - On invalid JSON, throw a typed `ParseError` carrying position info. The shell
   maps this to exit code `3`.
 
 ### Stage 2 — Sort
+
 - Reorder top-level keys per the canonical key-order table (unknown keys retained
   in a deterministic bucket — **(open)**: end of file vs. alphabetical tail).
 - Sort configured dependency-style maps using a stable, locale-independent
@@ -69,8 +71,9 @@ value-transformation ("normalize") stage. pkgsort changes the *arrangement* of a
 - Sorting only reorders keys; it never edits a key's value.
 
 ### Stage 3 — Serialize (write)
+
 - Emit JSON with configured indentation and trailing newline.
-- Serialization is the *only* place whitespace decisions are made, so output is
+- Serialization is the _only_ place whitespace decisions are made, so output is
   a pure function of the object + style config.
 
 ### Result
@@ -90,6 +93,7 @@ Two properties are enforced by tests, not convention:
 - **Portability:** output is independent of OS, locale, and Node version.
 
 To guarantee these:
+
 - Use a fixed, codepoint-based comparator for sorting (never `localeCompare`
   with the default locale).
 - Never introduce time, randomness, or environment into the core.
@@ -120,16 +124,16 @@ CLI flags  >  pkgsort.config.*  >  "pkgsort" key in package.json  >  defaults
 - Expand globs to concrete `package.json` paths, deduplicate, and format each
   through the same pure core.
 - Formatting of individual files is embarrassingly parallel; run with a bounded
-  concurrency pool. Order of *processing* never affects per-file *output*.
+  concurrency pool. Order of _processing_ never affects per-file _output_.
 
 ## 7. Error handling & exit codes
 
-| Situation | Core behaviour | CLI exit |
-| --- | --- | --- |
-| All good | returns results | `0` |
-| `--check`, drift found | returns `changed: true` | `1` |
-| Bad flags / no match / bad config | — | `2` |
-| Unparseable / invalid file | throws `ParseError` | `3` |
+| Situation                         | Core behaviour          | CLI exit |
+| --------------------------------- | ----------------------- | -------- |
+| All good                          | returns results         | `0`      |
+| `--check`, drift found            | returns `changed: true` | `1`      |
+| Bad flags / no match / bad config | —                       | `2`      |
+| Unparseable / invalid file        | throws `ParseError`     | `3`      |
 
 Errors are typed classes so the shell can map them to exit codes without string
 matching.
@@ -153,15 +157,15 @@ that sorting strategies live in `src/sorters/`.
 
 ## 10. Technology choices & rationale
 
-| Choice | Rationale |
-| --- | --- |
-| **TypeScript, strict** | Correctness for a tool that mutates users' files. |
-| **ESM-only** | Modern Node target (22 LTS+); simpler, tree-shakeable output. |
-| **Package-manager agnostic** | Works identically under npm, Yarn, pnpm, Bun. |
-| **Vitest** | Fast, TS-native, first-class coverage. |
-| **ESLint (typed) + Prettier** | Typed lint catches real bugs; Prettier owns style. |
-| **Zero/minimal runtime deps** | Smaller supply-chain surface; faster installs. |
-| **Changesets** | Disciplined, reviewable versioning and changelogs. |
+| Choice                        | Rationale                                                     |
+| ----------------------------- | ------------------------------------------------------------- |
+| **TypeScript, strict**        | Correctness for a tool that mutates users' files.             |
+| **ESM-only**                  | Modern Node target (22 LTS+); simpler, tree-shakeable output. |
+| **Package-manager agnostic**  | Works identically under npm, Yarn, pnpm, Bun.                 |
+| **Vitest**                    | Fast, TS-native, first-class coverage.                        |
+| **ESLint (typed) + Prettier** | Typed lint catches real bugs; Prettier owns style.            |
+| **Zero/minimal runtime deps** | Smaller supply-chain surface; faster installs.                |
+| **Changesets**                | Disciplined, reviewable versioning and changelogs.            |
 
 ## 11. Testing strategy (summary)
 

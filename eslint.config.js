@@ -44,5 +44,12 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-assignment': 'off',
     },
   },
+  {
+    // JS config files (this file, prettier.config.js) are not part of the
+    // TypeScript program, so type-aware linting cannot resolve them. Lint them
+    // with syntactic rules only.
+    files: ['**/*.js'],
+    ...tseslint.configs.disableTypeChecked,
+  },
   prettier,
 );

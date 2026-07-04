@@ -34,15 +34,15 @@ npm run check   # typecheck + lint + format:check + test
 
 ## Everyday commands
 
-| Command | What it does |
-| --- | --- |
-| `npm run build` | Compile `src/` to `dist/`. |
-| `npm run typecheck` | Type-check without emitting. |
-| `npm run lint` / `lint:fix` | Lint (typed) / autofix. |
-| `npm run format` / `format:check` | Prettier write / verify. |
-| `npm run test` / `test:watch` | Run the suite / watch mode. |
-| `npm run test:coverage` | Run with coverage thresholds. |
-| `npm run check` | Everything CI runs, locally. |
+| Command                           | What it does                  |
+| --------------------------------- | ----------------------------- |
+| `npm run build`                   | Compile `src/` to `dist/`.    |
+| `npm run typecheck`               | Type-check without emitting.  |
+| `npm run lint` / `lint:fix`       | Lint (typed) / autofix.       |
+| `npm run format` / `format:check` | Prettier write / verify.      |
+| `npm run test` / `test:watch`     | Run the suite / watch mode.   |
+| `npm run test:coverage`           | Run with coverage thresholds. |
+| `npm run check`                   | Everything CI runs, locally.  |
 
 ## Repository layout
 
@@ -107,7 +107,7 @@ boundary.
 Any behavioural change needs tests. In particular:
 
 - New formatting or sorting behaviour needs an **integration fixture** (input
-  + expected output).
+  - expected output).
 - Anything affecting output must not break the **idempotency** and **round-trip
   safety** invariant suites.
 - CLI changes need an **e2e** test asserting stdout/stderr and exit code.
@@ -130,7 +130,7 @@ coverage below threshold will fail CI.
 - **Every user-facing change must include a changeset:** run `npx changeset`
   and commit the generated file. This drives versioning and the changelog.
 - Keep PRs focused; one logical change per PR. Fill out the PR description:
-  *what*, *why*, and *how it was tested*.
+  _what_, _why_, and _how it was tested_.
 - CI (lint, typecheck, format, full test matrix) must be green before review.
 
 ## Releasing (maintainers)

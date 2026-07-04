@@ -12,7 +12,7 @@ Legend: ⬜ not started · 🟨 in progress · ✅ done
 
 ## Milestone 0 — Repository foundation ✅
 
-*Goal: a project that feels mature on day one, before a line of app code.*
+_Goal: a project that feels mature on day one, before a line of app code._
 
 - ✅ Docs (PRD, Architecture, Roadmap, Config), README, community health files.
 - ✅ Tooling: TypeScript (strict), ESLint (typed) + Prettier, Vitest.
@@ -22,9 +22,9 @@ Legend: ⬜ not started · 🟨 in progress · ✅ done
 
 ## Milestone 1 — CLI formatter (`0.1`) ⬜
 
-*Goal: a working `pkgsort` command that reads, sorts, and writes a single
+_Goal: a working `pkgsort` command that reads, sorts, and writes a single
 `package.json` deterministically. **The CLI is the only public surface** — no
-programmatic/TypeScript API is exposed.*
+programmatic/TypeScript API is exposed._
 
 - ⬜ Internal read → sort → write pipeline (pure core, effectful shell).
 - ⬜ Canonical top-level key ordering.
@@ -42,7 +42,7 @@ programmatic/TypeScript API is exposed.*
 
 ## Milestone 2 — Configuration (`0.2`) ⬜
 
-*Goal: opinionated defaults, fully overridable.*
+_Goal: opinionated defaults, fully overridable._
 
 - ⬜ Config discovery (`pkgsort.config.{json,jsonc,js}`, `package.json` key).
 - ⬜ Schema validation with actionable errors.
@@ -56,7 +56,7 @@ overridable and validated.
 
 ## Milestone 3 — Monorepo awareness (`0.3`) ⬜
 
-*Goal: one command formats an entire workspace, under any package manager.*
+_Goal: one command formats an entire workspace, under any package manager._
 
 - ⬜ Workspace root detection (npm / Yarn `workspaces`, `pnpm-workspace.yaml`,
   Bun workspaces).
@@ -76,7 +76,7 @@ budgets in the PRD).
 
 ## Milestone 5 — Hardening for `1.0` ⬜
 
-*Goal: earn the trust implied by a `1.0`.*
+_Goal: earn the trust implied by a `1.0`._
 
 - ⬜ Large real-world corpus regression suite.
 - ⬜ Performance benchmarks tracked in CI.

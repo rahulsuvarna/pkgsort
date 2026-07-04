@@ -33,15 +33,15 @@ casual sorter does not make — byte-level determinism, monorepo-wide
 enforcement, and CI-grade reporting — the way Prettier makes source formatting
 boring and conflict-free.
 
-| | `sort-package-json` | **pkgsort** |
-| --- | --- | --- |
-| Sort top-level keys | ✅ | ✅ |
-| Sort dependency maps | ✅ | ✅ |
-| Deterministic, idempotent output | Partial | ✅ (guaranteed & tested) |
-| `--check` mode for CI | ✅ | ✅ (with actionable diffs) |
-| Configurable sort behaviour | Limited | ✅ (opinionated defaults, fully overridable) |
-| Monorepo / workspace awareness | ❌ | ✅ |
-| Structured (JSON) reporter for tooling | ❌ | ✅ |
+|                                        | `sort-package-json` | **pkgsort**                                  |
+| -------------------------------------- | ------------------- | -------------------------------------------- |
+| Sort top-level keys                    | ✅                  | ✅                                           |
+| Sort dependency maps                   | ✅                  | ✅                                           |
+| Deterministic, idempotent output       | Partial             | ✅ (guaranteed & tested)                     |
+| `--check` mode for CI                  | ✅                  | ✅ (with actionable diffs)                   |
+| Configurable sort behaviour            | Limited             | ✅ (opinionated defaults, fully overridable) |
+| Monorepo / workspace awareness         | ❌                  | ✅                                           |
+| Structured (JSON) reporter for tooling | ❌                  | ✅                                           |
 
 If all you need is key ordering, `sort-package-json` is a fine, lightweight
 choice. If you manage many packages across many repos and want `package.json`
@@ -113,12 +113,12 @@ pkgsort --check --diff
 
 **Exit codes** (stable contract, safe to script against):
 
-| Code | Meaning |
-| ---- | ------- |
+| Code | Meaning                                                  |
+| ---- | -------------------------------------------------------- |
 | `0`  | Success — all files already formatted (or were written). |
-| `1`  | In `--check` mode, one or more files are not formatted. |
-| `2`  | Usage error (bad flags, no files matched). |
-| `3`  | A file could not be parsed or is invalid. |
+| `1`  | In `--check` mode, one or more files are not formatted.  |
+| `2`  | Usage error (bad flags, no files matched).               |
+| `3`  | A file could not be parsed or is invalid.                |
 
 > pkgsort `0.1` ships a **CLI only** — that is the entire public interface. A
 > programmatic/TypeScript API is intentionally not offered yet and may be
@@ -146,14 +146,14 @@ The complete, documented configuration reference lives in
 
 ## Documentation
 
-| Document | Purpose |
-| --- | --- |
-| [Product Requirements](./docs/PRD.md) | What we are building and for whom. |
-| [Architecture](./docs/ARCHITECTURE.md) | How the pipeline is designed. |
-| [Configuration](./docs/CONFIG.md) | Every option, its default, and rationale. |
-| [Roadmap](./docs/ROADMAP.md) | Milestones from `0.x` to `1.0`. |
-| [Contributing](./CONTRIBUTING.md) | How to set up, test, and submit changes. |
-| [Changelog](./CHANGELOG.md) | Notable changes, per release. |
+| Document                               | Purpose                                   |
+| -------------------------------------- | ----------------------------------------- |
+| [Product Requirements](./docs/PRD.md)  | What we are building and for whom.        |
+| [Architecture](./docs/ARCHITECTURE.md) | How the pipeline is designed.             |
+| [Configuration](./docs/CONFIG.md)      | Every option, its default, and rationale. |
+| [Roadmap](./docs/ROADMAP.md)           | Milestones from `0.x` to `1.0`.           |
+| [Contributing](./CONTRIBUTING.md)      | How to set up, test, and submit changes.  |
+| [Changelog](./CHANGELOG.md)            | Notable changes, per release.             |
 
 ## Contributing
 

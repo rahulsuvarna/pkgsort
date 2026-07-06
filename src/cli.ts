@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { ParseError } from './core/parse.js';
@@ -132,8 +132,29 @@ export function main(argv: readonly string[]): number {
   }
 }
 
+/**
+ * True when this module is the process entry point, whether launched directly
+ * (`node dist/cli.js`) or through the installed binary
+ * (`node_modules/.bin/pkgsort`). npm links that binary as a symlink to this
+ * file, so `process.argv[1]` is the symlink path while `import.meta.url` is the
+ * resolved real file — a raw string compare of the two never matches and
+ * `main()` silently never runs (observed as exit 0 with no output on WSL).
+ * Resolving `process.argv[1]` through `realpathSync` collapses the symlink so
+ * both sides name the same real file. `realpathSync` throws if the entry is not
+ * a real filesystem path, in which case this is not our entry point.
+ */
+function isMainModule(): boolean {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    return import.meta.url === pathToFileURL(realpathSync(entry)).href;
+  } catch {
+    return false;
+  }
+}
+
 /* c8 ignore start -- process wiring, exercised via the built binary, not unit tests. */
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMainModule()) {
   process.exit(main(process.argv));
 }
 /* c8 ignore stop */

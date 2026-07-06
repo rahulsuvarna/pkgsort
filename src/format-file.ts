@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
+import { unifiedDiff } from './core/diff.js';
 import { format } from './core/pipeline.js';
 
 /**
@@ -34,4 +35,19 @@ export function checkFile(filePath: string): { changed: boolean } {
   const input = readFileSync(filePath, 'utf8');
   const { changed } = format(input);
   return { changed };
+}
+
+/**
+ * Read a `package.json`, run the formatter, and report whether it would change
+ * along with a unified diff of that change — **without writing anything back**.
+ *
+ * Backs the CLI's `--check --diff` mode. Like {@link checkFile} it never writes;
+ * the returned `diff` is empty when the file is already sorted. Read and parse
+ * errors propagate exactly as they do for {@link formatFile}.
+ */
+export function diffFile(filePath: string): { changed: boolean; diff: string } {
+  const input = readFileSync(filePath, 'utf8');
+  const { output, changed } = format(input);
+  const diff = changed ? unifiedDiff(input, output, filePath) : '';
+  return { changed, diff };
 }

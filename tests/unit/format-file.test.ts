@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ParseError } from '../../src/core/parse.js';
-import { checkFile, formatFile } from '../../src/format-file.js';
+import { checkFile, diffFile, formatFile } from '../../src/format-file.js';
 
 describe('formatFile', () => {
   let dir: string;
@@ -92,6 +92,35 @@ describe('formatFile', () => {
     it('throws ParseError when the file is not valid JSON', () => {
       const file = writeFixture('{ not valid json');
       expect(() => checkFile(file)).toThrow(ParseError);
+    });
+  });
+
+  describe('diffFile', () => {
+    it('returns changed=true and a unified diff for an unsorted file', () => {
+      const file = writeFixture('{\n  "version": "1.0.0",\n  "name": "demo"\n}\n');
+      const { changed, diff } = diffFile(file);
+      expect(changed).toBe(true);
+      expect(diff).toContain('--- a/');
+      expect(diff).toContain('+++ b/');
+      expect(diff).toContain('@@');
+    });
+
+    it('returns changed=false and an empty diff for a sorted file', () => {
+      const sorted = '{\n  "name": "demo",\n  "version": "1.0.0"\n}\n';
+      const file = writeFixture(sorted);
+      expect(diffFile(file)).toEqual({ changed: false, diff: '' });
+    });
+
+    it('never modifies the file', () => {
+      const unsorted = '{\n  "version": "1.0.0",\n  "name": "demo"\n}\n';
+      const file = writeFixture(unsorted);
+      diffFile(file);
+      expect(readFileSync(file, 'utf8')).toBe(unsorted);
+    });
+
+    it('throws ParseError when the file is not valid JSON', () => {
+      const file = writeFixture('{ not valid json');
+      expect(() => diffFile(file)).toThrow(ParseError);
     });
   });
 });

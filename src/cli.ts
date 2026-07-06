@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { ParseError } from './core/parse.js';
-import { checkFile, formatFile } from './format-file.js';
+import { checkFile, diffFile, formatFile } from './format-file.js';
 
 /** The file pkgsort operates on when no path is given on the command line. */
 const DEFAULT_FILE = 'package.json';
@@ -14,7 +14,7 @@ const EXIT_DRIFT = 1;
 const EXIT_USAGE = 2;
 const EXIT_PARSE = 3;
 
-const HELP_TEXT = `Usage: pkgsort [--check] [path]
+const HELP_TEXT = `Usage: pkgsort [--check [--diff]] [path]
 
 Sort the top-level keys of a package.json into a canonical order, in place.
 When no path is given, pkgsort targets package.json in the current directory.
@@ -22,6 +22,8 @@ When no path is given, pkgsort targets package.json in the current directory.
 Options:
       --check    Verify the file is already sorted without modifying it.
                  Exits 0 if sorted, 1 if not.
+      --diff     With --check, print a unified diff of the changes that would
+                 be made instead of a message. Has no effect without --check.
   -h, --help     Print this help and exit.
   -v, --version  Print the version number and exit.`;
 
@@ -37,6 +39,7 @@ interface ParsedArgs {
   help: boolean;
   version: boolean;
   check: boolean;
+  diff: boolean;
   positionals: string[];
 }
 
@@ -48,11 +51,18 @@ interface ParsedArgs {
  * file-not-found error.
  */
 function parseArgs(args: readonly string[]): ParsedArgs {
-  const parsed: ParsedArgs = { help: false, version: false, check: false, positionals: [] };
+  const parsed: ParsedArgs = {
+    help: false,
+    version: false,
+    check: false,
+    diff: false,
+    positionals: [],
+  };
   for (const arg of args) {
     if (arg === '-h' || arg === '--help') parsed.help = true;
     else if (arg === '-v' || arg === '--version') parsed.version = true;
     else if (arg === '--check') parsed.check = true;
+    else if (arg === '--diff') parsed.diff = true;
     else parsed.positionals.push(arg);
   }
   return parsed;
@@ -64,7 +74,7 @@ function parseArgs(args: readonly string[]): ParsedArgs {
  * core; this layer only handles process concerns.
  */
 export function main(argv: readonly string[]): number {
-  const { help, version, check, positionals } = parseArgs(argv.slice(2));
+  const { help, version, check, diff, positionals } = parseArgs(argv.slice(2));
 
   if (help) {
     process.stdout.write(`${HELP_TEXT}\n`);
@@ -82,6 +92,19 @@ export function main(argv: readonly string[]): number {
 
   try {
     if (check) {
+      // `--diff` only refines check mode: it prints a unified patch of the
+      // changes that would be made instead of the drift message. It never
+      // writes, exactly like a plain `--check`.
+      if (diff) {
+        const { changed, diff: patch } = diffFile(filePath);
+        if (changed) {
+          process.stdout.write(patch);
+          return EXIT_DRIFT;
+        }
+        process.stdout.write(`${filePath} is already sorted\n`);
+        return EXIT_OK;
+      }
+
       const { changed } = checkFile(filePath);
       if (changed) {
         process.stderr.write(`${filePath} is not sorted. Run \`pkgsort ${filePath}\` to fix it.\n`);

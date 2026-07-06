@@ -110,6 +110,65 @@ describe('cli main', () => {
     });
   });
 
+  describe('--check --diff mode', () => {
+    it('prints a unified diff and exits 1 for a drifted file', () => {
+      const file = writeFixture(UNSORTED);
+      const code = run('--check', '--diff', file);
+      expect(code).toBe(1);
+      // A unified diff: file headers, a hunk marker, and the reordered lines.
+      expect(stdout).toContain('--- a/');
+      expect(stdout).toContain('+++ b/');
+      expect(stdout).toContain('@@');
+      expect(stdout).toContain('-  "version": "1.0.0",');
+      expect(stdout).toContain('+  "name": "demo",');
+    });
+
+    it('prints no diff and exits 0 for an already-sorted file', () => {
+      const file = writeFixture(SORTED);
+      const code = run('--check', '--diff', file);
+      expect(code).toBe(0);
+      expect(stdout).not.toContain('@@');
+      expect(stdout).not.toContain('--- a/');
+    });
+
+    it('does not modify the file in either case', () => {
+      const drifted = writeFixture(UNSORTED);
+      run('--check', '--diff', drifted);
+      expect(readFileSync(drifted, 'utf8')).toBe(UNSORTED);
+
+      const sorted = writeFixture(SORTED);
+      run('--check', '--diff', sorted);
+      expect(readFileSync(sorted, 'utf8')).toBe(SORTED);
+    });
+
+    it('accepts the flags in any order', () => {
+      const file = writeFixture(UNSORTED);
+      expect(run('--diff', '--check', file)).toBe(1);
+      expect(run(file, '--check', '--diff')).toBe(1);
+      expect(readFileSync(file, 'utf8')).toBe(UNSORTED);
+    });
+
+    it('exits 3 on invalid JSON without writing', () => {
+      const invalid = '{ not valid json';
+      const file = writeFixture(invalid);
+      const code = run('--check', '--diff', file);
+      expect(code).toBe(3);
+      expect(stderr).toContain('Invalid JSON');
+      expect(readFileSync(file, 'utf8')).toBe(invalid);
+    });
+  });
+
+  describe('--diff without --check', () => {
+    it('is ignored and falls back to normal in-place formatting', () => {
+      const file = writeFixture(UNSORTED);
+      const code = run('--diff', file);
+      expect(code).toBe(0);
+      expect(stdout).toContain('Sorted');
+      expect(stdout).not.toContain('@@');
+      expect(readFileSync(file, 'utf8')).toBe(SORTED);
+    });
+  });
+
   describe('default file (no path argument)', () => {
     it('sorts package.json in the current directory when no path is given', () => {
       writeFixture(UNSORTED);

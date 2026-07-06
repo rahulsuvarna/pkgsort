@@ -11,7 +11,7 @@
 
 </div>
 
-Version 0.1.2 released.
+Version 0.1.3 released.
 
 ---
 
@@ -75,6 +75,9 @@ pkgsort path/to/package.json
 # CI should run. Exits 0 if sorted, 1 if not. The flag position is flexible:
 # `pkgsort package.json --check` works identically.
 pkgsort --check
+
+# Print a unified diff of what --check would change (nothing is written).
+pkgsort --check --diff
 ```
 
 When no path is given, pkgsort targets `package.json` in the current directory.
@@ -92,6 +95,11 @@ as a normal format, then compares the result against the file on disk:
 
 Because it never writes, it is safe to run in read-only or CI environments. The
 flag works before or after the file path.
+
+Add `--diff` to print a unified diff of the changes `--check` would make instead
+of the drift message. It applies only together with `--check`: on a drifted file
+it prints the diff and exits `1`, and on an already-sorted file it prints no diff
+and exits `0`. Nothing is written in either case.
 
 **Exit codes** (stable contract, safe to script against):
 

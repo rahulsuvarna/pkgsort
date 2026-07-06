@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.3] - 2026-07-06
+
+### Added
+
+- CLI: `--diff` prints a unified diff of the changes `--check` would make. It
+  applies only with `--check`: on drift it prints the diff and exits `1`; on an
+  already-sorted file it prints no diff and exits `0`; and, like `--check`, it
+  never writes to disk. `--diff` has no effect without `--check`.
+
 ## [0.1.2] - 2026-07-06
 
 ### Added
@@ -49,6 +58,7 @@ _Nothing yet._
   monorepo support, a reporting/programmatic API, and other not-yet-implemented
   functionality.
 
-[Unreleased]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/rahulsuvarna/pkgsort/releases/tag/v0.1.1

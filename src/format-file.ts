@@ -19,3 +19,19 @@ export function formatFile(filePath: string): { changed: boolean } {
   }
   return { changed };
 }
+
+/**
+ * Read a `package.json` from disk and report whether it is already in canonical
+ * order, **without writing anything back**.
+ *
+ * This backs the CLI's `--check` mode. It runs the same pure {@link format}
+ * pipeline as {@link formatFile} — so the two can never disagree about what
+ * "sorted" means — but deliberately performs no write. `changed === false`
+ * means the file is already correctly sorted. Read and parse errors propagate
+ * exactly as they do for {@link formatFile}.
+ */
+export function checkFile(filePath: string): { changed: boolean } {
+  const input = readFileSync(filePath, 'utf8');
+  const { changed } = format(input);
+  return { changed };
+}

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ParseError } from '../../src/core/parse.js';
-import { formatFile } from '../../src/format-file.js';
+import { checkFile, formatFile } from '../../src/format-file.js';
 
 describe('formatFile', () => {
   let dir: string;
@@ -58,5 +58,40 @@ describe('formatFile', () => {
   it('throws ParseError when the file is not valid JSON', () => {
     const file = writeFixture('{ not valid json');
     expect(() => formatFile(file)).toThrow(ParseError);
+  });
+
+  describe('checkFile', () => {
+    it('reports no change for an already-sorted file', () => {
+      const sorted = '{\n  "name": "demo",\n  "version": "1.0.0"\n}\n';
+      const file = writeFixture(sorted);
+      expect(checkFile(file)).toEqual({ changed: false });
+    });
+
+    it('reports a change for an unsorted file', () => {
+      const file = writeFixture('{\n  "version": "1.0.0",\n  "name": "demo"\n}\n');
+      expect(checkFile(file)).toEqual({ changed: true });
+    });
+
+    it('never modifies the file, sorted or not', () => {
+      const unsorted = '{\n  "version": "1.0.0",\n  "name": "demo"\n}\n';
+      const file = writeFixture(unsorted);
+      checkFile(file);
+      expect(readFileSync(file, 'utf8')).toBe(unsorted);
+    });
+
+    it('throws when the file does not exist', () => {
+      const missing = join(dir, 'does-not-exist.json');
+      try {
+        checkFile(missing);
+        expect.unreachable('checkFile should have thrown');
+      } catch (error) {
+        expect((error as NodeJS.ErrnoException).code).toBe('ENOENT');
+      }
+    });
+
+    it('throws ParseError when the file is not valid JSON', () => {
+      const file = writeFixture('{ not valid json');
+      expect(() => checkFile(file)).toThrow(ParseError);
+    });
   });
 });

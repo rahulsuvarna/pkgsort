@@ -40,7 +40,7 @@ describe('e2e: CLI invoked through a symlinked bin path', () => {
 
   beforeAll(() => {
     // This suite exercises the compiled binary, so make sure dist/ is current.
-    execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore', shell: true });
+    execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore' });
   }, 60_000);
 
   beforeEach(() => {

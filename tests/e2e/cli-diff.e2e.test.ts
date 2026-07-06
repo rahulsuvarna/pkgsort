@@ -34,7 +34,7 @@ describe('e2e: built CLI --check --diff', () => {
 
   beforeAll(() => {
     // This suite exercises the compiled binary, so make sure dist/ is current.
-    execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore', shell: true });
+    execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore' });
   }, 60_000);
 
   beforeEach(() => {

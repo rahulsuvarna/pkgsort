@@ -11,10 +11,7 @@
 
 </div>
 
-> [!NOTE]
-> **Version `0.1.1`.** pkgsort is a CLI that sorts the top-level keys of a
-> `package.json` and provides a `--check` mode. It does not sort dependencies or
-> other nested values.
+Version 0.1.2 released.
 
 ---
 
@@ -68,14 +65,19 @@ npx @rsuvarna/pkgsort --check package.json
 ### CLI
 
 ```sh
-# Sort a package.json in place.
-pkgsort package.json
+# Sort package.json in the current directory in place.
+pkgsort
 
-# Verify a file is already sorted without modifying it — the command CI
-# should run. Exits 0 if sorted, 1 if not. The flag position is flexible:
+# Sort an explicit file instead.
+pkgsort path/to/package.json
+
+# Verify the current directory's package.json without modifying it — the command
+# CI should run. Exits 0 if sorted, 1 if not. The flag position is flexible:
 # `pkgsort package.json --check` works identically.
-pkgsort --check package.json
+pkgsort --check
 ```
+
+When no path is given, pkgsort targets `package.json` in the current directory.
 
 ### Check mode
 
@@ -97,7 +99,7 @@ flag works before or after the file path.
 | ---- | ------------------------------------------------------------------ |
 | `0`  | Success — the file is already sorted, or was sorted in place.      |
 | `1`  | In `--check` mode, the file is not sorted.                         |
-| `2`  | Usage error — no file was given, or the file could not be read.    |
+| `2`  | The file could not be read (for example, it does not exist).       |
 | `3`  | The file could not be parsed (invalid JSON, or not a JSON object). |
 
 ### Continuous integration

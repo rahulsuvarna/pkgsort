@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.2] - 2026-07-06
+
+### Added
+
+- CLI: when no path argument is given, pkgsort targets `package.json` in the
+  current directory (for example, `pkgsort` and `pkgsort --check`). Passing an
+  explicit path behaves exactly as before, and a missing default file returns
+  the same read error and exit code (`2`) as a missing explicit path.
+
 ## [0.1.1] - 2026-07-06
 
 ### Added
@@ -40,5 +49,6 @@ _Nothing yet._
   monorepo support, a reporting/programmatic API, and other not-yet-implemented
   functionality.
 
-[Unreleased]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/rahulsuvarna/pkgsort/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/rahulsuvarna/pkgsort/releases/tag/v0.1.1

@@ -5,15 +5,19 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ParseError } from './core/parse.js';
 import { checkFile, formatFile } from './format-file.js';
 
+/** The file pkgsort operates on when no path is given on the command line. */
+const DEFAULT_FILE = 'package.json';
+
 /** Exit codes, per `docs/ARCHITECTURE.md` §7. */
 const EXIT_OK = 0;
 const EXIT_DRIFT = 1;
 const EXIT_USAGE = 2;
 const EXIT_PARSE = 3;
 
-const HELP_TEXT = `Usage: pkgsort [--check] <path-to-package.json>
+const HELP_TEXT = `Usage: pkgsort [--check] [path]
 
 Sort the top-level keys of a package.json into a canonical order, in place.
+When no path is given, pkgsort targets package.json in the current directory.
 
 Options:
       --check    Verify the file is already sorted without modifying it.
@@ -71,11 +75,10 @@ export function main(argv: readonly string[]): number {
     return EXIT_OK;
   }
 
-  const filePath = positionals[0];
-  if (filePath === undefined || filePath === '') {
-    process.stderr.write(`${HELP_TEXT}\n`);
-    return EXIT_USAGE;
-  }
+  // When no path is given, default to package.json in the current directory. A
+  // missing default file then falls through to the same read-error path (and
+  // exit code) as an explicit missing path.
+  const filePath = positionals[0] ?? DEFAULT_FILE;
 
   try {
     if (check) {

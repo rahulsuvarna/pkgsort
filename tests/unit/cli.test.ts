@@ -14,9 +14,11 @@ describe('cli main', () => {
   let dir: string;
   let stdout: string;
   let stderr: string;
+  let originalCwd: string;
 
   beforeEach(() => {
     dir = mkdtempSync(join(tmpdir(), 'pkgsort-cli-'));
+    originalCwd = process.cwd();
     stdout = '';
     stderr = '';
     vi.spyOn(process.stdout, 'write').mockImplementation((chunk: unknown) => {
@@ -31,6 +33,9 @@ describe('cli main', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    // Restore cwd before removing the temp dir (a process cannot sit in a
+    // directory being deleted, and some tests chdir into `dir`).
+    process.chdir(originalCwd);
     rmSync(dir, { recursive: true, force: true });
   });
 
@@ -105,6 +110,35 @@ describe('cli main', () => {
     });
   });
 
+  describe('default file (no path argument)', () => {
+    it('sorts package.json in the current directory when no path is given', () => {
+      writeFixture(UNSORTED);
+      process.chdir(dir);
+      const code = run();
+      expect(code).toBe(0);
+      expect(stdout).toContain('Sorted');
+      expect(readFileSync(join(dir, 'package.json'), 'utf8')).toBe(SORTED);
+    });
+
+    it('checks package.json in the current directory when no path is given', () => {
+      writeFixture(SORTED);
+      process.chdir(dir);
+      const code = run('--check');
+      expect(code).toBe(0);
+      expect(stdout).toContain('already sorted');
+      expect(stderr).toBe('');
+    });
+
+    it('reports drift for an unsorted default file in --check mode', () => {
+      writeFixture(UNSORTED);
+      process.chdir(dir);
+      const code = run('--check');
+      expect(code).toBe(1);
+      expect(stderr).toContain('not sorted');
+      expect(readFileSync(join(dir, 'package.json'), 'utf8')).toBe(UNSORTED);
+    });
+  });
+
   describe('existing behaviour is preserved', () => {
     it('sorts a file in place without --check', () => {
       const file = writeFixture(UNSORTED);
@@ -114,10 +148,11 @@ describe('cli main', () => {
       expect(readFileSync(file, 'utf8')).toBe(SORTED);
     });
 
-    it('exits 2 with usage when no file is given', () => {
+    it('exits 2 when the default package.json is missing', () => {
+      process.chdir(dir); // empty temp dir — no package.json present
       const code = run();
       expect(code).toBe(2);
-      expect(stderr).toContain('Usage:');
+      expect(stderr).toContain('File not found');
     });
 
     it('prints help and exits 0', () => {

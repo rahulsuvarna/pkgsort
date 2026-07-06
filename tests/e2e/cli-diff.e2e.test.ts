@@ -9,6 +9,14 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const cliPath = join(repoRoot, 'dist', 'cli.js');
 
+function runBuild(): void {
+  if (process.platform === 'win32') {
+    execFileSync('cmd.exe', ['/d', '/s', '/c', 'npm run build'], { cwd: repoRoot, stdio: 'ignore' });
+    return;
+  }
+  execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore' });
+}
+
 const SORTED = '{\n  "name": "demo",\n  "version": "1.0.0"\n}\n';
 const UNSORTED = '{\n  "version": "1.0.0",\n  "name": "demo"\n}\n';
 
@@ -34,7 +42,7 @@ describe('e2e: built CLI --check --diff', () => {
 
   beforeAll(() => {
     // This suite exercises the compiled binary, so make sure dist/ is current.
-    execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore' });
+    runBuild();
   }, 60_000);
 
   beforeEach(() => {

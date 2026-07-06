@@ -44,6 +44,16 @@ npm run check   # typecheck + lint + format:check + test
 | `npm run test:coverage`           | Run with coverage thresholds. |
 | `npm run check`                   | Everything CI runs, locally.  |
 
+## Pre-commit hooks
+
+This repository uses a git pre-commit hook (Husky + lint-staged).
+
+- On commit, it runs `npm run test`, then auto-fixes staged files with
+  `eslint --fix` and `prettier --write`, then runs `npm run lint` and
+  `npm run format:check`.
+- If any step fails, the commit is blocked.
+- Auto-fixed staged files are re-staged automatically.
+
 ## Repository layout
 
 The codebase follows the "pure core, effectful shell" design from

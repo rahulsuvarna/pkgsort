@@ -11,7 +11,10 @@ const cliPath = join(repoRoot, 'dist', 'cli.js');
 
 function runBuild(): void {
   if (process.platform === 'win32') {
-    execFileSync('cmd.exe', ['/d', '/s', '/c', 'npm run build'], { cwd: repoRoot, stdio: 'ignore' });
+    execFileSync('cmd.exe', ['/d', '/s', '/c', 'npm run build'], {
+      cwd: repoRoot,
+      stdio: 'ignore',
+    });
     return;
   }
   execFileSync('npm', ['run', 'build'], { cwd: repoRoot, stdio: 'ignore' });
